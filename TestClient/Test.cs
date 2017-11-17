@@ -58,7 +58,7 @@ namespace TestClient
                             pat.Location.Facility = loc.Facility;
                             loc.Careunit = "UNIT1";
                             pat.Location.Careunit = loc.Careunit;
-                            loc.RoomBed = "1";
+                            loc.RoomBed = suffix.ToString();   //increment bed order
                             pat.Location.RoomBed = loc.RoomBed;
 
                             msg.AddPatientDetails(pat);
@@ -73,43 +73,32 @@ namespace TestClient
 
                             //Console.ReadKey();
 
-                            //  TCPcommn tCPcommn = new TCPcommn();
-                            // tCPcommn.TCPCliennt("abcd", "127.0.0.1", 10002);   //AdT port
-
-                            //      TCPcommn.sendADT("A01");  //sendADT for top patient
-
-                /*            foreach (var p in msg.GetAllPatient())
+                              TCPcommn tCPcommn = new TCPcommn();
+                            Console.WriteLine("Patient MRN List\n");
+                            foreach (var p in msg.GetAllPatient())
                             {
                                 Console.WriteLine(p.MRN + "\n");
                             }
                             Console.WriteLine("Enter the pat MRN for Admit");
-                            string val = "MRN1";// Console.ReadLine();
-                            TCPcommn.TCPCliennt(msg.GenerateHL7ADTMessage(val, "A01"), "127.0.0.1", 10002);  //generate A03 for  entered mrn
-
-    */
-                            testTcpClient.testTCPcclient();
+                            string val = Console.ReadLine();
+                           tCPcommn.HariTCPclient(msg.GenerateHL7ADTMessage(val, "A01"), "127.0.0.1", 10002);
                             break;
                             
                         }
                     case 3:
                         {
                             //get list of patient and create discharge for entered mrn
-                            
+                            TCPcommn tCPcommn = new TCPcommn();
+                            Console.WriteLine("Patient MRN List\n");
                             foreach(var p in msg.GetAllPatient())
                             {
                                 Console.WriteLine(p.MRN+"\n");
                             }
                             Console.WriteLine("Enter the pat MRN for discharge");  
                             string val= Console.ReadLine();
-                            
-                            TCPcommn.TCPCliennt(msg.GenerateHL7ADTMessage(val, "A03"),"127.0.0.1",10002);  //generate A03 for  entered mrn
-                        //   foreach(var item in msg.GetAllPatient().SelectMany(p=>p.MRN==val,pat))  //.Find(p=>p.MRN=="abcd"))
-                        //    {
-                        //        
-                        //        TCPcommn.TCPCliennt(msg.GenerateHL7ADTMessage(item.MRN, "A03"), "127.0.0.1", 10002);
-                        //
-                        //    }
-                            //TCPcommn.sendADT("A03");   //send A03
+
+                            tCPcommn.HariTCPclient(msg.GenerateHL7ADTMessage(val, "A03"),"127.0.0.1",10002);  //generate A03 for  entered mrn
+                        
                             break;
                             
                         }
@@ -117,6 +106,31 @@ namespace TestClient
                     case 4:
                         {
                             //transfer
+                            
+                            TCPcommn tCPcommn = new TCPcommn();
+                           
+                            Console.WriteLine("Patient MRN List\n");
+                            foreach (var p in msg.GetAllPatient())
+                            {
+                                Console.WriteLine(p.MRN + "\n");
+                            }
+                            Console.WriteLine("Enter the pat MRN for transfer");
+                            string mrn = Console.ReadLine();
+
+                            Console.WriteLine("Enter the pat new location\nEnter Facility\n");
+                            string fac = Console.ReadLine();
+                            Console.WriteLine("Enter CareUnit\n");
+                            string cunit = Console.ReadLine();
+                            Console.WriteLine("Enter RoomBed\n");
+                            string rb = Console.ReadLine();
+                            Console.WriteLine("RoomBed: {0}",msg.GetPatientDetails(mrn).Location.RoomBed);
+                            Entities.PV1 loc1 = new PV1();
+                            loc1.Facility = fac;
+                            loc1.Careunit = cunit;
+                            loc1.RoomBed = rb;
+                            msg.UpdateLocation(mrn, loc1);
+                            
+                            tCPcommn.HariTCPclient(msg.GenerateHL7ADTMessage(mrn, "A02"), "127.0.0.1", 10002);  
                             break;
                         }
                    
