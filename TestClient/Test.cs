@@ -81,7 +81,8 @@ namespace TestClient
                             }
                             Console.WriteLine("Enter the pat MRN for Admit");
                             string val = Console.ReadLine();
-                           tCPcommn.HariTCPclient(msg.GenerateHL7ADTMessage(val, "A01"), "127.0.0.1", 10002);
+                            if(msg.GetPatientDetails(val)!=null)
+                                tCPcommn.HariTCPclient(msg.GenerateHL7ADTMessage(val, "A01"), "127.0.0.1", 10002);
                             break;
                             
                         }
@@ -96,9 +97,8 @@ namespace TestClient
                             }
                             Console.WriteLine("Enter the pat MRN for discharge");  
                             string val= Console.ReadLine();
-
-                            tCPcommn.HariTCPclient(msg.GenerateHL7ADTMessage(val, "A03"),"127.0.0.1",10002);  //generate A03 for  entered mrn
-                        
+                            if (msg.GetPatientDetails(val) != null)
+                                    tCPcommn.HariTCPclient(msg.GenerateHL7ADTMessage(val, "A03"),"127.0.0.1",10002);  //generate A03 for  entered mrn
                             break;
                             
                         }
@@ -129,8 +129,8 @@ namespace TestClient
                             loc1.Careunit = cunit;
                             loc1.RoomBed = rb;
                             msg.UpdateLocation(mrn, loc1);
-                            
-                            tCPcommn.HariTCPclient(msg.GenerateHL7ADTMessage(mrn, "A02"), "127.0.0.1", 10002);  
+                            if (msg.GetPatientDetails(mrn) != null)
+                                tCPcommn.HariTCPclient(msg.GenerateHL7ADTMessage(mrn, "A02"), "127.0.0.1", 10002);  
                             break;
                         }
                    

@@ -18,22 +18,28 @@ namespace Entities
         */
 
         
-          private string _MRN;
-              public string MRN
-              {
-                  get { return _MRN; }
-                  set { _MRN = value; }
-              }
+        private string _MRN;
+        private string _FirstName;
+        private string _LastName;
+        private string _Address;
 
-              private string _FirstName;
-
+        public Patient()   //constructor to initalize location
+        {
+            Location = new PV1();
+        }
+        public string MRN
+        {
+            get { return _MRN; }
+            set { _MRN = value; }
+        }
+            
+     
               public string FirstName
               {
                   get { return _FirstName; }
                   set { _FirstName = value; }
               }
-
-              private string _LastName;
+      
 
               public string LastName
               {
@@ -41,8 +47,7 @@ namespace Entities
                   set { _LastName = value; }
               }
 
-              private string _Address;        
-
+     
               public string Address
               {
                   get { return _Address; }
@@ -62,12 +67,7 @@ namespace Entities
         {
             get;set;
         }
-
-        public Patient()   //constructor to initalize location
-        {
-            Location = new PV1();
-        }
-      
+     
     }
 
 
@@ -198,7 +198,7 @@ namespace Repository    //it provide database related operations like add, searc
                 //          Console.ReadLine();
 
 
-                if (mrn!="")
+                if (GetPatientDetails(mrn)!=null)
                 {
                     //update value in dictionary
                     //MSH-6
@@ -283,7 +283,7 @@ namespace Repository    //it provide database related operations like add, searc
                     }
                     
                 }
-                Console.WriteLine("\nADT Message is :" + Output);
+                Console.WriteLine("\nADT Message is :\n" + Output);
                 return Output;
             }
             catch (Exception ex)
@@ -367,28 +367,36 @@ namespace Repository    //it provide database related operations like add, searc
         }
 
 
+
         public Patient GetPatientDetails(string mrn)
         {
             //throw new NotImplementedException();
+            //Patient outres = null;
 
-           // try
-            //{
+            Patient outres = _allPatients.Find(x => x.MRN == mrn);
+               
+            return outres;
+
+           /* try
+           {
                 foreach (var pat in _allPatients)
                 {
                     if (pat.MRN == mrn)
                     {
-                        return pat;
+                        outres.MRN = mrn;
                     }
-
+                    
                 }
-            //}
-            //catch (Exception e)
-            //{
-              //  Console.WriteLine(e.StackTrace);
-                //return 1;
-                throw new Exception("\nPatient not found");
+
+                return outres;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+                return null;
+                //throw new Exception("\nPatient not found");
             
-            //}
+            }*/
                         
         }    //return patient details from List
 
