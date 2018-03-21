@@ -21,7 +21,7 @@ namespace TestClient
             //myMenu
             do
             {
-                Console.WriteLine("\n\n/************my Menu***********/\n1.Add Patient\n2.Send ADT A01\n3.Send ADT A03\n4.Send ADt A02\n5.Exit");
+                Console.WriteLine("\n\n/************my Menu***********/\n1.Add Patient\n2.Send ADT A01\n3.Send ADT A03\n4.Send ADt A02\n5.Send MEDAdmin message\n6.Exit");
                 Console.WriteLine("Select your choice");
                 //Console.WriteLine("Select from Menu Enter 1 for Add Patient\n2 for Send ADT A01\n3 for send ADT A03\n4 Exit");
                 choice = Convert.ToInt32(Console.ReadLine());
@@ -60,6 +60,12 @@ namespace TestClient
                             pat.Location.Careunit = loc.Careunit;
                             loc.RoomBed = suffix.ToString();   //increment bed order
                             pat.Location.RoomBed = loc.RoomBed;
+
+                            //new items
+                            pat.AccountNumber = "ACN" + suffix;
+                            pat.DriverLicenseNumber = "DL" + suffix;
+                            pat.SocialSecurityNumber = "SSN" + suffix;
+                            pat.VisitNumber = "VN" + suffix;
 
                             msg.AddPatientDetails(pat);
                             suffix++;
@@ -133,10 +139,29 @@ namespace TestClient
                                 tCPcommn.HariTCPclient(msg.GenerateHL7ADTMessage(mrn, "A02"), "127.0.0.1", 10002);  
                             break;
                         }
+                    case 5:
+                        {
+                            TCPcommn tCPcommn = new TCPcommn();
+
+                            Console.WriteLine("Patient MRN List\n");
+                            foreach (var p in msg.GetAllPatient())
+                            {
+                                Console.WriteLine(p.MRN + "\n");
+                            }
+                            Console.WriteLine("Enter the pat MRN  for which to send MEDAdmin");
+                            string mrn = Console.ReadLine();
+
+                            if(msg.GetPatientDetails(mrn)!=null)
+                            {
+                                tCPcommn.HariTCPclient(msg.GenerateHL7PtMessage(mrn),"127.0.0.1",10003);
+                            }
+
+                            break;
+                        }
                    
                 }
 
-            }while(choice!=5);
+            }while(choice!=6);
             
         }
     }
